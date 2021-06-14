@@ -12,6 +12,7 @@ import { StudentService } from './student.service';
 export class AppComponent implements OnInit {
   public students: Student[];
   public updateStudent: Student;
+  public deleteStudent: Student;
 
   constructor(private studentService: StudentService ) {
 
@@ -46,6 +47,7 @@ export class AppComponent implements OnInit {
       button.setAttribute('data-target', '#updateStudentModal');
     }
     if(mode === 'delete') {
+      this.deleteStudent = student;
       button.setAttribute('data-target', '#deleteStudentModal');
     }
     container.appendChild(button);
@@ -59,9 +61,11 @@ export class AppComponent implements OnInit {
       (response: Student) => {
         console.log(response);
         this.getStudents();
+        addForm.reset();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
+        addForm.reset();
       }
 
     );
@@ -78,6 +82,36 @@ export class AppComponent implements OnInit {
       }
 
     );
+  }
+
+  public onDeleteStudent(studentId: number): void{
+    this.studentService.deleteStudent(studentId).subscribe(
+      (response: void) => {
+        console.log(response);
+        this.getStudents();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+
+    );
+  }
+
+  public searchStudents(key: string): void {
+    const results: Student[] = [];
+    for (const student of this.students) {
+      if(student.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || student.email.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || student.phone.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || student.field.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      ){
+        results.push(student);
+      }
+    }
+    this.students = results;
+    if(results.length === 0 || !key){
+      this.getStudents();
+    }
   }
 
 }
