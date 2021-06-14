@@ -5,7 +5,7 @@ export class Student {
     field: string;
     phone: string;
     imageUrl: string;
-    stduentCode: string;
+    studentCode: string;
 
     
 }

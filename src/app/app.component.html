@@ -1,3 +1,135 @@
-<div *ngFor="let student of students">
-  <div>{{ student.name }}</div>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color: white;">Student manager</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="Toggle navigation">
+    <span class="navbar-togggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item-active">
+        <a class="nav-link" (click)="onOpenModal(null, 'add')" data-toggle="model" >Add Student <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input type="search" name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search student..." required>
+    </form>
+  </div>
+</nav>
+<div class="container" id="main-container">
+    <div class="row">
+        <div *ngFor="let student of students" class="col-md-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body row">
+                    <div class="col-6">
+                        <a href=""><img src="{{student?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
+                    </div>
+                    <div class="col-6 card-title align-self-center mb-0">
+                        <h5>"{{student?.name}}"</h5>
+                        <p class="m-0">"{{student?.field}}"</p>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fa fa-envelope float-right"></i>"{{student?.email}}"</li>
+                    <li class="list-group-item"><i class="fa fa-phone float-right"></i>"{{student?.phone}}"</li>
+                </ul>
+                <div class="card-body">
+                    <div class="float-right btn-group btn-group-sm">
+                        <a class="btn btn-primary tooltips" href="#" (click)="onOpenModal(student, 'update')" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a class="btn btn-secondary tooltips"  href="#" (click)="onOpenModal(student, 'delete')" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Add Student Modal -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddStudent(addForm)">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" placeholder="Name" class="form-control" ngModel required>
+          </div>
+           <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email" class="form-control" ngModel required>
+          </div>
+           <div class="form-group">
+            <label for="field">Field</label>
+            <input type="text" name="field" id="field" placeholder="Field" class="form-control" ngModel required>
+          </div>
+           <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" name="phone" id="phone" placeholder="Phone" class="form-control" ngModel required>
+          </div>
+           <div class="form-group">
+            <label for="image">Image URL</label>
+            <input type="text" name="imageUrl" id="imageUrl" placeholder="Image URL" class="form-control" ngModel required>
+          </div>
+           <div class="modal-footer">
+             <button type="button" id="add-student-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Student Modal -->
+<div class="modal fade" id="updateStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateStudentModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Student </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #updateForm="ngForm">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ngModel="{{ updateStudent?.name }}" name="name" id="name" placeholder="Name" class="form-control" ngModel required>
+          </div>
+          <input type="hidden" ngModel="{{ updateStudent?.id }}" name="id" class="form-control" id="id">
+          <input type="hidden" ngModel="{{ updateStudent?.studentCode }}" name="studentCode" class="form-control" id="studentCode">
+           <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" ngModel="{{ updateStudent?.email }}" name="email" id="email" placeholder="Email" class="form-control" ngModel required>
+          </div>
+           <div class="form-group">
+            <label for="field">Field</label>
+            <input type="text" ngModel="{{ updateStudent?.field }}" name="field" id="field" placeholder="Field" class="form-control" ngModel required>
+          </div>
+           <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" ngModel="{{ updateStudent?.phone }}" name="phone" id="phone" placeholder="Phone" class="form-control" ngModel required>
+          </div>
+           <div class="form-group">
+            <label for="image">Image URL</label>
+            <input type="text" ngModel="{{ updateStudent?.imageUrl }}" name="imageUrl" id="imageUrl" placeholder="Image URL" class="form-control" ngModel required>
+          </div>
+           <div class="modal-footer">
+             <button type="button" id="update-student-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             <button  (click)="onUpdateStudent(updateForm.value)" type="button" class="btn btn-primary" >Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Student Modal -->
+<div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="deleteStudentModalLabel" aria-hidden="true"></div>
+
